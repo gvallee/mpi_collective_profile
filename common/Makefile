@@ -3,7 +3,7 @@
 # See LICENSE.txt for license information
 #
 
-FORMATVERSION := `cat ../../FORMAT_VERSION`
+FORMATVERSION := `cat ../FORMAT_VERSION`
 
 all: \
 	format.o                      \
