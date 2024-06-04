@@ -1277,7 +1277,7 @@ int MPI_Alltoall(const void *sendbuf, const int sendcount, MPI_Datatype sendtype
                   void *recvbuf, const int recvcount, MPI_Datatype recvtype, MPI_Comm comm)
 {
 #if defined(HAVE_MPIX_HARMONIZE)
-    /* From time to time we need to resynchronize the clocks, but we can only do it on MPI_Allgatherv on
+    /* From time to time we need to resynchronize the clocks, but we can only do it on MPI_Alltoall on
      * MPI_COMM_WORLD.
      */
     if( MPI_COMM_WORLD == comm ) {
