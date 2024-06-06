@@ -597,7 +597,7 @@ static void save_call_patterns(int uniqueID)
 	DEBUG_ALLTOALLV_PROFILING("Saving call patterns...\n");
 
 	output_dir = get_output_dir();
-    if (output_dir != NULL)
+	if (output_dir != NULL)
 	{
 		_asprintf(filename, size, "%s/call-patterns-rank%d.txt", output_dir, world_rank);
 	}
@@ -632,7 +632,7 @@ static void save_patterns(int world_rank)
 	DEBUG_ALLTOALLV_PROFILING("Saving patterns...\n");
 
 	output_dir = get_output_dir();
-    if (output_dir != NULL)
+	if (output_dir != NULL)
 	{
 		_asprintf(spatterns_filename, size, "%s/patterns-send-rank%d.txt", output_dir, world_rank);
 		assert(size > 0);

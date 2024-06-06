@@ -184,7 +184,7 @@ open_content_storage_file(char *collective_name, char **filename, FILE **file, u
 
     _output_dir = get_output_dir();
     if (ctxt < 0 || ctxt > 1)
-    {        
+    {
         if (_output_dir)
         {
             _asprintf(_filename, rc, "%s/%s_buffcontent_comm%" PRIu64 "_rank%d.txt", _output_dir, collective_name, comm_id, world_rank);

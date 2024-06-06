@@ -640,16 +640,16 @@ static void save_call_patterns(int uniqueID)
 
 	DEBUG_ALLTOALL_PROFILING("Saving call patterns...\n");
 
-	output_dir = get_output_dir();
+    output_dir = get_output_dir();
     if (output_dir != NULL)
-	{
-		_asprintf(filename, size, "%s/call-patterns-rank%d.txt", output_dir, world_rank);
+    {
+        _asprintf(filename, size, "%s/call-patterns-rank%d.txt", output_dir, world_rank);
 	}
-	else
-	{
-		_asprintf(filename, size, "call-patterns-rank%d.txt", world_rank);
-	}
-	assert(size > 0);
+    else
+    {
+        _asprintf(filename, size, "call-patterns-rank%d.txt", world_rank);
+    }
+    assert(size > 0);
 
 	FILE *fh = fopen(filename, "w");
 	assert(fh);
@@ -712,16 +712,16 @@ static void save_counters_for_validation(int myrank, int avCalls, int size, cons
 	char *output_dir = NULL;
 	int rc;
 
-	output_dir = get_output_dir();
+    output_dir = get_output_dir();
     if (output_dir != NULL)
-	{
-		_asprintf(filename, rc, "%s/validation_data-rank%d-call%d.txt", output_dir, myrank, avCalls);
-	}
-	else
-	{
-		_asprintf(filename, rc, "validation_data-rank%d-call%d.txt", myrank, avCalls);
-	}
-	assert(rc < MAX_PATH_LEN);
+    {
+        _asprintf(filename, rc, "%s/validation_data-rank%d-call%d.txt", output_dir, myrank, avCalls);
+    }
+    else
+    {
+        _asprintf(filename, rc, "validation_data-rank%d-call%d.txt", myrank, avCalls);
+    }
+    assert(rc < MAX_PATH_LEN);
 
 	FILE *fh = fopen(filename, "w");
 	assert(fh);
@@ -1019,14 +1019,14 @@ static void save_counts(int *sendcounts, int *recvcounts, int s_datatype_size, i
 
     output_dir = get_output_dir();
     if (output_dir)
-	{
-		_asprintf(filename, rc, "%s/counts.rank%d_call%d.md", output_dir, world_rank, n_call);
-	}
-	else
-	{
-		_asprintf(filename, rc, "counts.rank%d_call%d.md", world_rank, n_call);
-	}
-	assert(rc > 0);
+    {
+        _asprintf(filename, rc, "%s/counts.rank%d_call%d.md", output_dir, world_rank, n_call);
+    }
+    else
+    {
+        _asprintf(filename, rc, "counts.rank%d_call%d.md", world_rank, n_call);
+    }
+    assert(rc > 0);
 
 	FILE *f = fopen(filename, "w");
 	assert(f);
