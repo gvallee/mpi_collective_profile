@@ -591,13 +591,18 @@ static void _save_patterns(FILE *fh, avPattern_t *p, char *ctx)
 static void save_call_patterns(int uniqueID)
 {
 	char *filename = NULL;
+	char *output_dir_envvar = NULL;
 	int size;
 
 	DEBUG_ALLTOALLV_PROFILING("Saving call patterns...\n");
 
-	if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
 	{
-		_asprintf(filename, size, "%s/call-patterns-rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), world_rank);
+		_asprintf(filename, size, "%s/call-patterns-rank%d.txt", output_dir_envvar, world_rank);
 	}
 	else
 	{
@@ -624,15 +629,20 @@ static void save_patterns(int world_rank)
 {
 	char *spatterns_filename = NULL;
 	char *rpatterns_filename = NULL;
+	char *output_dir_envvar = NULL;
 	int size;
 
 	DEBUG_ALLTOALLV_PROFILING("Saving patterns...\n");
 
-	if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
 	{
-		_asprintf(spatterns_filename, size, "%s/patterns-send-rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), world_rank);
+		_asprintf(spatterns_filename, size, "%s/patterns-send-rank%d.txt", output_dir_envvar, world_rank);
 		assert(size > 0);
-		_asprintf(rpatterns_filename, size, "%s/patterns-recv-rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), world_rank);
+		_asprintf(rpatterns_filename, size, "%s/patterns-recv-rank%d.txt", output_dir_envvar, world_rank);
 		assert(size > 0);
 	}
 	else

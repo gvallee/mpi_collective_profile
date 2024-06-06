@@ -636,10 +636,15 @@ static void save_call_patterns(int uniqueID)
 {
 	char *filename = NULL;
 	int size;
+	char *output_dir_envvar = NULL;
 
 	DEBUG_ALLTOALL_PROFILING("Saving call patterns...\n");
 
-	if (getenv(OUTPUT_DIR_ENVVAR))
+	output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
 	{
 		_asprintf(filename, size, "%s/call-patterns-rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), world_rank);
 	}
@@ -668,15 +673,20 @@ static void save_patterns(int world_rank)
 {
 	char *spatterns_filename = NULL;
 	char *rpatterns_filename = NULL;
+	char *output_dir_envvar = NULL;
 	int size;
 
 	DEBUG_ALLTOALL_PROFILING("Saving patterns...\n");
 
-	if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
 	{
-		_asprintf(spatterns_filename, size, "%s/patterns-send-rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), world_rank);
+		_asprintf(spatterns_filename, size, "%s/patterns-send-rank%d.txt", output_dir_envvar, world_rank);
 		assert(size > 0);
-		_asprintf(rpatterns_filename, size, "%s/patterns-recv-rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), world_rank);
+		_asprintf(rpatterns_filename, size, "%s/patterns-recv-rank%d.txt", output_dir_envvar, world_rank);
 		assert(size > 0);
 	}
 	else
@@ -704,12 +714,17 @@ static void save_patterns(int world_rank)
 
 static void save_counters_for_validation(int myrank, int avCalls, int size, const int *sendcounts, const int *recvcounts)
 {
-	char *filename;
+	char *filename = NULL;
+	char *output_dir_envvar = NULL;
 	int rc;
 
-	if (getenv(OUTPUT_DIR_ENVVAR))
+	output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
 	{
-		_asprintf(filename, rc, "%s/validation_data-rank%d-call%d.txt", getenv(OUTPUT_DIR_ENVVAR), myrank, avCalls);
+		_asprintf(filename, rc, "%s/validation_data-rank%d-call%d.txt", output_dir_envvar, myrank, avCalls);
 	}
 	else
 	{
@@ -1007,12 +1022,17 @@ static int _commit_data()
 static void save_counts(int *sendcounts, int *recvcounts, int s_datatype_size, int r_datatype_size, int comm_size, int n_call)
 {
 	char *filename = NULL;
+	char *output_dir_envvar = NULL;
 	int i;
 	int rc;
 
-	if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
 	{
-		_asprintf(filename, rc, "%s/counts.rank%d_call%d.md", getenv(OUTPUT_DIR_ENVVAR), world_rank, n_call);
+		_asprintf(filename, rc, "%s/counts.rank%d_call%d.md", output_dir_envvar, world_rank, n_call);
 	}
 	else
 	{

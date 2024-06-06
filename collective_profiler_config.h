@@ -11,9 +11,16 @@
 #define SYNC 0 // Force the ranks to sync after each collective operations to ensure rank 0 does not artifically fall behind
 #define DEFAULT_MSG_SIZE_THRESHOLD 200     // The default threshold between small and big messages
 
-// A few environment variables to control a few things at runtime
-#define MSG_SIZE_THRESHOLD_ENVVAR "MSG_SIZE_THRESHOLD" // Name of the environment variable to change the value used to differentiate small and large messages
-#define OUTPUT_DIR_ENVVAR "A2A_PROFILING_OUTPUT_DIR"   // Name of the environment variable to specify where output files will be created
+/* A few environment variables to control a few things at runtime */
+
+// Name of the environment variable to change the value used to differentiate small and large messages
+#define MSG_SIZE_THRESHOLD_ENVVAR "MSG_SIZE_THRESHOLD" 
+
+// Name of the environment variable to specify where output files will be created. DEPRECATED, prefer PROFILER_OUTPUT_DIR_ENVVAR instead
+#define OUTPUT_DIR_ENVVAR "A2A_PROFILING_OUTPUT_DIR"
+
+// Name of the environment variable to specify where output files will be created. 
+#define PROFILER_OUTPUT_DIR_ENVVAR "MPI_COLLECTIVE_PROFILER_OUTPUT_DIR"
 
 #ifndef FORMAT_VERSION
 #define FORMAT_VERSION (0)

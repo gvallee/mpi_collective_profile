@@ -1233,12 +1233,17 @@ static int _commit_data()
 static void save_counts(int *sendcount, int *recvcounts, int s_datatype_size, int r_datatype_size, int comm_size, uint64_t n_call)
 {
     char *filename = NULL;
+    char *output_dir_envvar = NULL;
     int i;
     int rc;
 
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
     {
-        _asprintf(filename, rc, "%s/counts.rank%d_call%" PRIu64 ".md", getenv(OUTPUT_DIR_ENVVAR), world_rank, n_call);
+        _asprintf(filename, rc, "%s/counts.rank%d_call%" PRIu64 ".md", output_dir_envvar, world_rank, n_call);
     }
     else
     {
@@ -1288,14 +1293,19 @@ static inline void
 allgatherv_save_buf_content(void *buf, const int count, MPI_Datatype type, MPI_Comm comm, int rank, char *ctxt)
 {
     char *filename = NULL;
+    char *output_dir_envvar = NULL;
     int rc;
 
     assert(buf);
     assert(ctxt);
 
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+    if (output_dir_envvar == NULL)
+        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
+
+    if (output_dir_envvar != NULL)
     {
-        _asprintf(filename, rc, "%s/data_%s_rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), ctxt, rank);
+        _asprintf(filename, rc, "%s/data_%s_rank%d.txt", output_dir_envvar, ctxt, rank);
         assert(rc > 0);
     }
     else
