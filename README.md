@@ -113,7 +113,7 @@ set -x
 module purge
 module load gcc/4.8.5 ompi/4.0.1
 
-export A2A_PROFILING_OUTPUT_DIR=/shared/data/profiling/osu/alltoallv/traces1
+export MPI_COLLECTIVE_PROFILER_OUTPUT_DIR=/shared/data/profiling/osu/alltoallv/traces1
 
 COUNTSFLAGS="/path/to/profiler/code/alltoall_profiling/alltoallv/liballtoallv_counts.so"
 MAPFLAGS="/path/to/profiler/code/alltoall_profiling/alltoallv/liballtoallv_location.so"
@@ -122,7 +122,7 @@ A2ATIMINGFLAGS="/path/to/profiler/code/alltoall_profiling/alltoallv/liballtoallv
 LATETIMINGFLAGS="/path/to/profiler/code/alltoall_profiling/alltoallv/liballtoallv_late_arrival.so"
 
 MPIFLAGS="--mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1 "
-MPIFLAGS+="-x A2A_PROFILING_OUTPUT_DIR "
+MPIFLAGS+="-x MPI_COLLECTIVE_PROFILER_OUTPUT_DIR "
 MPIFLAGS+="-x LD_LIBRARY_PATH "
 
 mpirun -np 1024 -map-by ppr:32:node -bind-to core $MPIFLAGS -x LD_PRELOAD="$COUNTSFLAGS" /path/to/osu/install/osu-5.6.3/libexec/osu-micro-benchmarks/mpi/collective/osu_alltoallv -f

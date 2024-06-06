@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021, NVIDIA CORPORATION. All rights reserved.
+ * Copyright (c) 2021-2024, NVIDIA CORPORATION. All rights reserved.
  *
  * See LICENSE.txt for license information
  ************************************************************************/
@@ -57,6 +57,8 @@ typedef struct datatype_info
 
     MPI_Datatype type;
 } datatype_info_t;
+
+extern char *get_output_dir();
 
 static inline char *
 type_id_to_str(int id)
@@ -130,13 +132,16 @@ static inline int
 open_datatype_info_file(char *collective_name, uint32_t comm_id, int world_rank, uint64_t call_id, char *ctxt, char **file_name, FILE **file)
 {
     char *filename = NULL;
+    char *output_dir = NULL;
     int rc;
+
+    output_dir = get_output_dir();
 
     if (ctxt == NULL)
     {
-        if (getenv(OUTPUT_DIR_ENVVAR))
+        if (output_dir)
         {
-            _asprintf(filename, rc, "%s/%s_datatype-info_comm%" PRIu32 "_rank%d_call%" PRIu64 ".md", getenv(OUTPUT_DIR_ENVVAR), collective_name, comm_id, world_rank, call_id);
+            _asprintf(filename, rc, "%s/%s_datatype-info_comm%" PRIu32 "_rank%d_call%" PRIu64 ".md", output_dir, collective_name, comm_id, world_rank, call_id);
             assert(rc > 0);
         }
         else
@@ -147,9 +152,9 @@ open_datatype_info_file(char *collective_name, uint32_t comm_id, int world_rank,
     }
     else
     {
-        if (getenv(OUTPUT_DIR_ENVVAR))
+        if (output_dir)
         {
-            _asprintf(filename, rc, "%s/%s_datatype-info_%s_comm%" PRIu32 "_rank%d_call%" PRIu64 ".md", getenv(OUTPUT_DIR_ENVVAR), collective_name, ctxt, comm_id, world_rank, call_id);
+            _asprintf(filename, rc, "%s/%s_datatype-info_%s_comm%" PRIu32 "_rank%d_call%" PRIu64 ".md", output_dir, collective_name, ctxt, comm_id, world_rank, call_id);
             assert(rc > 0);
         }
         else

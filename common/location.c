@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021, NVIDIA CORPORATION. All rights reserved.
+ * Copyright (c) 2021-2024, NVIDIA CORPORATION. All rights reserved.
  *
  * See LICENSE.txt for license information
  ************************************************************************/
@@ -15,14 +15,19 @@
 location_logger_t *location_loggers_head = NULL;
 location_logger_t *location_loggers_tail = NULL;
 
+extern char *get_output_dir();
+
 static inline int _open_location_file(location_logger_t *logger)
 {
     int rc;
+    char *output_dir = NULL;
+
     assert(logger);
     assert(logger->collective_name);
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir = get_output_dir();
+    if (output_dir)
     {
-        _asprintf(logger->filename, rc, "%s/%s_locations_comm%" PRIu64 "_rank%d.md", getenv(OUTPUT_DIR_ENVVAR), logger->collective_name, logger->commid, logger->world_rank);
+        _asprintf(logger->filename, rc, "%s/%s_locations_comm%" PRIu64 "_rank%d.md", output_dir, logger->collective_name, logger->commid, logger->world_rank);
     }
     else
     {

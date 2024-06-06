@@ -1196,9 +1196,12 @@ static int _commit_data()
         int ret, rc;
         size_t i;
         char *filename = NULL;
-        if (getenv(OUTPUT_DIR_ENVVAR))
+        char *output_dir = NULL;
+
+        output_dir = get_output_dir();
+        if (output_dir)
         {
-            _asprintf(filename, rc, "%s/timestamps.rank%d.md", getenv(OUTPUT_DIR_ENVVAR), world_rank);
+            _asprintf(filename, rc, "%s/timestamps.rank%d.md", output_dir, world_rank);
         }
         else
         {
@@ -1233,17 +1236,14 @@ static int _commit_data()
 static void save_counts(int *sendcount, int *recvcounts, int s_datatype_size, int r_datatype_size, int comm_size, uint64_t n_call)
 {
     char *filename = NULL;
-    char *output_dir_envvar = NULL;
+    char *output_dir = NULL;
     int i;
     int rc;
 
-    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
-    if (output_dir_envvar == NULL)
-        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
-
-    if (output_dir_envvar != NULL)
+    output_dir = get_output_dir();
+    if (output_dir != NULL)
     {
-        _asprintf(filename, rc, "%s/counts.rank%d_call%" PRIu64 ".md", output_dir_envvar, world_rank, n_call);
+        _asprintf(filename, rc, "%s/counts.rank%d_call%" PRIu64 ".md", output_dir, world_rank, n_call);
     }
     else
     {
@@ -1293,19 +1293,16 @@ static inline void
 allgatherv_save_buf_content(void *buf, const int count, MPI_Datatype type, MPI_Comm comm, int rank, char *ctxt)
 {
     char *filename = NULL;
-    char *output_dir_envvar = NULL;
+    char *output_dir = NULL;
     int rc;
 
     assert(buf);
     assert(ctxt);
 
-    output_dir_envvar = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
-    if (output_dir_envvar == NULL)
-        output_dir_envvar = getenv(OUTPUT_DIR_ENVVAR);
-
-    if (output_dir_envvar != NULL)
+    output_dir = get_output_dir();
+    if (output_dir != NULL)
     {
-        _asprintf(filename, rc, "%s/data_%s_rank%d.txt", output_dir_envvar, ctxt, rank);
+        _asprintf(filename, rc, "%s/data_%s_rank%d.txt", output_dir, ctxt, rank);
         assert(rc > 0);
     }
     else

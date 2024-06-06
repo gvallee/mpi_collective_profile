@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2021, NVIDIA CORPORATION. All rights reserved.
+ * Copyright (c) 2021-2024, NVIDIA CORPORATION. All rights reserved.
  *
  * See LICENSE.txt for license information
  ************************************************************************/
@@ -24,6 +24,8 @@ backtrace_logger_t *trace_loggers_head = NULL;
 backtrace_logger_t *trace_loggers_tail = NULL;
 uint64_t trace_id = 0;
 
+extern char *get_output_dir();
+
 static inline void _write_backtrace_info(FILE *f)
 {
     assert(f);
@@ -38,11 +40,13 @@ static inline void _write_backtrace_info(FILE *f)
 static inline int _open_backtrace_file(char *collective_name, char **backtrace_filename, FILE **backtrace_file, int world_rank, uint64_t id)
 {
     char *filename = NULL;
+    char *output_dir = NULL;
     int rc;
     // filename schema: bracktrace_rank<WORLDRANK>_trace<ID>.md
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir = get_output_dir();
+    if (output_dir)
     {
-        _asprintf(filename, rc, "%s/%s_backtrace_rank%d_trace%" PRIu64 ".md", getenv(OUTPUT_DIR_ENVVAR), collective_name, world_rank, id);
+        _asprintf(filename, rc, "%s/%s_backtrace_rank%d_trace%" PRIu64 ".md", output_dir, collective_name, world_rank, id);
         assert(rc > 0);
     }
     else
