@@ -49,21 +49,26 @@ extern int log_displs(logger_t *logger,
 char *get_output_dir()
 {
     char *dirpath = NULL;
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    char *output_dir = NULL;
+
+    output_dir = getenv(OUTPUT_DIR_ENVVAR);
+    if (output_dir == NULL)
+        output_dir = getenv(PROFILER_OUTPUT_DIR_ENVVAR);
+
+    if (output_dir)
     {
-        dirpath = getenv(OUTPUT_DIR_ENVVAR);
         // if the output directory does not exist, we create it
-        DIR *dir = opendir(dirpath);
+        DIR *dir = opendir(output_dir);
         if (dir == NULL && errno == ENOENT)
         {
             // The directory does not exist, we try to create it.
             // We do not check the return code because this is best
             // effort the value of the environment variable is set
             // by the user.
-            mkdir(dirpath, 0744);
+            mkdir(output_dir, 0744);
         }
     }
-    return dirpath;
+    return output_dir;
 }
 
 void log_groups(logger_t *logger, group_t *gps, int num_gps)

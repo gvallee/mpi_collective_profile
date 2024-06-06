@@ -51,6 +51,7 @@ typedef struct buffcontent_logger
 
 extern buffcontent_logger_t *buffcontent_loggers_head;
 extern buffcontent_logger_t *buffcontent_loggers_tail;
+extern char *get_output_dir();
 
 static inline void
 _display_config(int dt_num_intergers, int dt_num_addresses, int dt_num_datatypes, int dt_combiner)
@@ -178,12 +179,15 @@ static inline int
 open_content_storage_file(char *collective_name, char **filename, FILE **file, uint64_t comm_id, int world_rank, int ctxt, char *mode)
 {
     char *_filename = NULL;
+    char *_output_dir = NULL;
     int rc;
+
+    _output_dir = get_output_dir();
     if (ctxt < 0 || ctxt > 1)
-    {
-        if (getenv(OUTPUT_DIR_ENVVAR))
+    {        
+        if (_output_dir)
         {
-            _asprintf(_filename, rc, "%s/%s_buffcontent_comm%" PRIu64 "_rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), collective_name, comm_id, world_rank);
+            _asprintf(_filename, rc, "%s/%s_buffcontent_comm%" PRIu64 "_rank%d.txt", _output_dir, collective_name, comm_id, world_rank);
             assert(rc > 0);
         }
         else
@@ -197,9 +201,9 @@ open_content_storage_file(char *collective_name, char **filename, FILE **file, u
         char *_ctxt = "send";
         if (ctxt == RECV_CONTEXT_IDX)
             _ctxt = "recv";
-        if (getenv(OUTPUT_DIR_ENVVAR))
+        if (_output_dir)
         {
-            _asprintf(_filename, rc, "%s/%s_buffcontent_comm%" PRIu64 "_rank%d_%s.txt", getenv(OUTPUT_DIR_ENVVAR), collective_name, comm_id, world_rank, _ctxt);
+            _asprintf(_filename, rc, "%s/%s_buffcontent_comm%" PRIu64 "_rank%d_%s.txt", _output_dir, collective_name, comm_id, world_rank, _ctxt);
             assert(rc > 0);
         }
         else
@@ -335,10 +339,12 @@ save_buf_content(void *buf, const int *counts, const int *displs, MPI_Datatype t
     PMPI_Type_size(type, &dtsz);
 
     char *filename = NULL;
+    char *output_dir = NULL;
     int rc;
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    output_dir = get_output_dir();
+    if (output_dir)
     {
-        _asprintf(filename, rc, "%s/data_%s_rank%d.txt", getenv(OUTPUT_DIR_ENVVAR), ctxt, rank);
+        _asprintf(filename, rc, "%s/data_%s_rank%d.txt", output_dir, ctxt, rank);
         assert(rc > 0);
     }
     else

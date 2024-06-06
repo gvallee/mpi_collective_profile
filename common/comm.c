@@ -19,6 +19,8 @@ comm_data_t *comm_data_head = NULL;
 comm_data_t *comm_data_tail = NULL;
 uint32_t next_id = 0;
 
+extern char *get_output_dir();
+
 int lookup_comm(MPI_Comm comm, uint32_t *id)
 {
     comm_data_t *data = comm_data_head;
@@ -93,15 +95,18 @@ int release_comm_data(char *collective_name, int lead_rank)
         {
             if (fd == NULL)
             {
+                char *output_dir = NULL;
+
+                output_dir = get_output_dir();
 
                 // Convert the collective name to a all-lower case string for consistency
                 name = strdup(collective_name);
                 name[0] = tolower(name[0]);
 
                 //int lead_rank = comm_data_head->lead_rank;
-                if (getenv(OUTPUT_DIR_ENVVAR))
+                if (output_dir)
                 {
-                    _asprintf(filename, rc, "%s/%s_comm_data_rank%d.md", getenv(OUTPUT_DIR_ENVVAR), name, lead_rank);
+                    _asprintf(filename, rc, "%s/%s_comm_data_rank%d.md", output_dir, name, lead_rank);
                     assert(rc > 0);
                 }
                 else

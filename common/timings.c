@@ -15,6 +15,7 @@
 
 comm_timing_logger_t *timing_loggers_head = NULL;
 comm_timing_logger_t *timing_loggers_tail = NULL;
+extern char *get_output_dir();
 
 int init_time_tracking(MPI_Comm comm, char *collective_name, int world_rank, int comm_rank, int jobid, comm_timing_logger_t **logger)
 {
@@ -30,10 +31,15 @@ int init_time_tracking(MPI_Comm comm, char *collective_name, int world_rank, int
     new_logger->prev = NULL;
     new_logger->comm_id = comm_id;
 
+#if ENABLE_EXEC_TIMING || ENABLE_LATE_ARRIVAL_TIMING
+    char *output_dir = NULL;
+    output_dir = get_output_dir();
+#endif
+
 #if ENABLE_EXEC_TIMING
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    if (output_dir)
     {
-        _asprintf(new_logger->filename, rc, "%s/%s_execution_times.rank%d_comm%" PRIu32 "_job%d.md", getenv(OUTPUT_DIR_ENVVAR), collective_name, world_rank, comm_id, jobid);
+        _asprintf(new_logger->filename, rc, "%s/%s_execution_times.rank%d_comm%" PRIu32 "_job%d.md", output_dir, collective_name, world_rank, comm_id, jobid);
     }
     else
     {
@@ -42,9 +48,9 @@ int init_time_tracking(MPI_Comm comm, char *collective_name, int world_rank, int
 #endif // ENABLE_EXEC_TIMING
 
 #if ENABLE_LATE_ARRIVAL_TIMING
-    if (getenv(OUTPUT_DIR_ENVVAR))
+    if (output_dir)
     {
-        _asprintf(new_logger->filename, rc, "%s/%s_late_arrival_times.rank%d_comm%" PRIu32 "_job%d.md", getenv(OUTPUT_DIR_ENVVAR), collective_name, world_rank, comm_id, jobid);
+        _asprintf(new_logger->filename, rc, "%s/%s_late_arrival_times.rank%d_comm%" PRIu32 "_job%d.md", output_dir, collective_name, world_rank, comm_id, jobid);
     }
     else
     {
